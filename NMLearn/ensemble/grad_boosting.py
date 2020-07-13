@@ -37,7 +37,6 @@ class grad_boosting:
             Y_pred = self.predict(X)
             partial_mse = partial(mse, Y=Y)
             grad = calc_grad(partial_mse, Y_pred.squeeze(), delta=0.001)
-            print("Stage {}: MSE loss {}".format(i+1, mse(Y_pred.squeeze(),Y).mean()))
 
             # fit base learner to ensemble error gradient
             model = self.base_learner(**self.model_params.copy())
@@ -49,7 +48,7 @@ class grad_boosting:
             if i == 0:
                 resp = model.predict(X)
             else:
-                resp -= 2*model.predict(X)
+                resp -= model.predict(X)
         return resp/len(self.list_of_models)
             
             

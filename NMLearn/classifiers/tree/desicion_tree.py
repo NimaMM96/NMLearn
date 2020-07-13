@@ -54,13 +54,12 @@ class Node(dict):
 
 class base_decision_tree:
     C = None # this attribute represents the number of classes for a classification problem and for regression tasks, represents the number of dependant variables
-    def __init__(self, max_depth, p=20, training_alogrithim="CART", obj_func='IG', growth_rate=0.05, **kwargs):
+    def __init__(self, max_depth, p=20, training_alogrithim="CART", obj_func='IG', **kwargs):
 
         # check if required parameter is passed, if not check kwargs
         if max_depth is None:
             max_depth = kwargs["max_depth"]
             p = kwargs.get("p", 20)
-            growth_rate = kwargs.get("growth_rate", 0.05)
             training_alogrithim = kwargs.get("training_alogrithim", "CART")
             obj_func = kwargs.get("obj_func", "IG")
 
@@ -72,7 +71,6 @@ class base_decision_tree:
         self.__depth = max_depth
         self.__no_leaf_nodes = 0
         self.__is_regression = obj_func.lower() == "mse"
-        self.__growth_rate = growth_rate
 
 
     def traverse_tree(self, X: np.ndarray, I: np.ndarray, node: Node) -> np.ndarray:
@@ -167,11 +165,11 @@ class regression_tree(base_decision_tree):
 #######################
         
 class classification_tree(base_decision_tree):
-    def __init__(self, max_depth, p=20, training_alogrithim="CART", obj_func='gini', growth_rate=0.05, **kwargs):
+    def __init__(self, max_depth, p=20, training_alogrithim="CART", obj_func='gini', **kwargs):
         # assertions
         if obj_func.lower() == "ig":
             assert training_alogrithim.lower() == "randomize", "For the Information Gain criterion, only the random selection training algorithim suppourted currently"
-        super(classification_tree, self).__init__(max_depth, p, training_alogrithim, obj_func, growth_rate, **kwargs)
+        super(classification_tree, self).__init__(max_depth, p, training_alogrithim, obj_func, **kwargs)
 
     def fit(self, X: np.ndarray, Y: np.ndarray) -> None:
         super(classification_tree, self).fit(X, Y)
